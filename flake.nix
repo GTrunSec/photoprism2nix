@@ -19,7 +19,7 @@
       };
 
       config = with lib; {
-        users.users.photoprism = { isSystemUser = true; group = "photoprism" };
+        users.users.photoprism = { isSystemUser = true; group = "photoprism"; };
 
         users.groups.photoprism = { };
 
