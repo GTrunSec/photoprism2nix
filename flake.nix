@@ -58,7 +58,7 @@
               #"-/etc/resolv.conf"
             #];
             ExecStart = mkDefault "${self.outputs.defaultPackage.x86_64-linux}/bin/photoprism start";
-            WorkingDirectory = "/var/lib/photoprism";
+            #WorkingDirectory = "/var/lib/photoprism";
             StateDirectory = "photoprism";
             BindPaths = [
               "/var/lib/photoprism"
@@ -90,7 +90,7 @@
 
 
           environment = {
-            HOME = "/var/lib/photoprism";
+            #HOME = "/var/lib/photoprism";
             SSL_CERT_DIR = "${pkgs.cacert}/etc/ssl/certs";
 
             PHOTOPRISM_ADMIN_PASSWORD = "photoprism";
@@ -117,7 +117,8 @@
             PHOTOPRISM_SITE_TITLE = "PhotoPrism";
             PHOTOPRISM_SITE_URL = "http://127.0.0.1:2342/";
             PHOTOPRISM_STORAGE_PATH = "/var/lib/photoprism/storage";
-            PHOTOPRISM_ASSETS_PATH = "${self.outputs.defaultPackage.x86_64-linux}/usr/lib/photoprism/assets";
+            #PHOTOPRISM_ASSETS_PATH = "${self.outputs.defaultPackage.x86_64-linux}/usr/lib/photoprism/assets";
+            PHOTOPRISM_ASSETS_PATH = "/var/lib/photoprism/assets";
             PHOTOPRISM_ORIGINALS_PATH = "/var/lib/photoprism/originals";
             PHOTOPRISM_IMPORT_PATH = "/var/lib/photoprism/import";
             PHOTOPRISM_THUMB_FILTER = "linear";
@@ -147,12 +148,32 @@
 
         subPackages = [ "cmd/photoprism" ];
 
+	#preBuild = ''
+          #patchShebangs ./
+	  #sed -i 's/\/tmp\/photoprism/\$\{tmp\}/' scripts/download-nsfw.sh
+	  #sed -i 's/\/tmp\/photoprism/\$\{tmp\}/' scripts/download-nasnet.sh
+	  #cd frontend
+	  #npm install
+	  #npm audit fix
+	  #make dep-go
+	  #make build-js
+	#'';
+
         postInstall = ''
           mkdir -p $out/usr/lib/photoprism/assets/{,nasnet,nsfw}
           cp -r $src/assets/static $src/assets/profiles $src/assets/templates $out/usr/lib/photoprism/assets
         '';
 
-        buildInputs = [ pkgs.libtensorflow-bin ];
+        nativeBuildInputs = with pkgs; [ 
+	  nodejs
+	  unzip
+	  which
+	  wget
+	];
+
+        buildInputs = with pkgs; [ 
+	  libtensorflow-bin
+	];
       };
   };
 }
