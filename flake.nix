@@ -23,7 +23,7 @@
 
         users.groups.photoprism = { };
 
-        systemd.photoprism = {
+        systemd.services.photoprism = {
           enable = true;
           after = [ "network-online.target" "postgresql.service" ];
           wantedBy = [ "multi-user.target" ];
