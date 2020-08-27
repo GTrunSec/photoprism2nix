@@ -25,7 +25,7 @@
 
         systemd.services.photoprism = {
           enable = true;
-          after = [ "network-online.target" "postgresql.service" ];
+          after = [ "network-online.target" "mysql.service" ];
           wantedBy = [ "multi-user.target" ];
 
           confinement = {
@@ -44,28 +44,26 @@
             pkgs.darktable
             pkgs.ffmpeg
             pkgs.exiftool
-            self.outputs.defaultPackage.x86_64-linux
           ];
 
           serviceConfig = {
             Restart = "always";
             RestartSec = "10";
             User = "photoprism";
-            TemporaryFileSystem = mkForce [ "/" "/etc" ];
-            BindReadOnlyPaths = [
-              "/etc/hosts"
-              "/etc/resolv.conf"
-            ];
+            #TemporaryFileSystem = [ "/" "/etc" ];
+            #BindReadOnlyPaths = [
+              #"-/etc/hosts"
+              #"-/etc/resolv.conf"
+            #];
             ExecStart = mkDefault "${self.outputs.defaultPackage.x86_64-linux}/bin/photoprism start";
             WorkingDirectory = "/var/lib/photoprism";
             StateDirectory = "photoprism";
             BindPaths = [
               "/var/lib/photoprism"
-              "/run/postgresql"
-              "/var/run/postgresql"
+              "-/run/mysqld"
+              "-/var/run/mysqld"
             ];
             PrivateUsers = true;
-            DynamicUser = mkForce false;
             PrivateDevices = true;
             ProtectClock = true;
             ProtectKernelLogs = true;
