@@ -34,7 +34,7 @@
               pkgs.darktable
               pkgs.ffmpeg
               pkgs.exiftool
-              pkgs.photoprism
+              self.outputs.defaultPackage.x86_64-linux
               pkgs.cacert
             ];
           };
@@ -44,7 +44,7 @@
             pkgs.darktable
             pkgs.ffmpeg
             pkgs.exiftool
-            pkgs.photoprism
+            self.outputs.defaultPackage.x86_64-linux
           ];
 
           serviceConfig = {
@@ -56,7 +56,7 @@
               "/etc/hosts"
               "/etc/resolv.conf"
             ];
-            ExecStart = mkDefault "${pkgs.photoprism}/bin/photoprism start";
+            ExecStart = mkDefault "${self.outputs.defaultPackage.x86_64-linux}/bin/photoprism start";
             WorkingDirectory = "/var/lib/photoprism";
             StateDirectory = "photoprism";
             BindPaths = [
@@ -117,7 +117,7 @@
             PHOTOPRISM_SITE_TITLE = "PhotoPrism";
             PHOTOPRISM_SITE_URL = "http://127.0.0.1:2342/";
             PHOTOPRISM_STORAGE_PATH = "/var/lib/photoprism/storage";
-            PHOTOPRISM_ASSETS_PATH = "${pkgs.photoprism}/usr/lib/photoprism/assets";
+            PHOTOPRISM_ASSETS_PATH = "${self.outputs.defaultPackage.x86_64-linux}/usr/lib/photoprism/assets";
             PHOTOPRISM_ORIGINALS_PATH = "/var/lib/photoprism/originals";
             PHOTOPRISM_IMPORT_PATH = "/var/lib/photoprism/import";
             PHOTOPRISM_THUMB_FILTER = "linear";
@@ -129,7 +129,6 @@
         };
       };
     };
-
 
     defaultPackage.x86_64-linux =
       with import nixpkgs { system = "x86_64-linux"; };
