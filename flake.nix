@@ -148,8 +148,7 @@
         subPackages = [ "cmd/photoprism" ];
 
         postInstall = ''
-          mkdir -p $out/usr/lib/photoprism/assets
-          #cp ./photoprism $out/bin/photoprism
+          mkdir -p $out/usr/lib/photoprism/assets/{,nasnet,nsfw}
           cp -r $src/assets/static $src/assets/profiles $src/assets/templates $out/usr/lib/photoprism/assets
         '';
 
