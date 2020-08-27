@@ -19,6 +19,10 @@
       };
 
       config = with lib; {
+        users.users.photoprism = { isSystemUser = true; group = "photoprism" };
+
+        users.groups.photoprism = { };
+
         systemd.photoprism = {
           enable = true;
           after = [ "network-online.target" "postgresql.service" ];
@@ -46,7 +50,7 @@
           serviceConfig = {
             Restart = "always";
             RestartSec = "10";
-            User = name;
+            User = "photoprism";
             TemporaryFileSystem = mkForce [ "/" "/etc" ];
             BindReadOnlyPaths = [
               "/etc/hosts"
