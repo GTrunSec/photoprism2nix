@@ -29,6 +29,8 @@
           wantedBy = [ "multi-user.target" ];
 
           confinement = {
+	    enable = true;
+	    binSh = null;
             packages = [
               pkgs.libtensorflow-bin
               pkgs.darktable
