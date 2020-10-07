@@ -138,8 +138,8 @@
         src = pkgs.fetchFromGitHub {
           owner = "photoprism";
           repo = "photoprism";
-          rev = "27dff245a5c6c082fa517d2b76d9da96b276059c";
-          sha256 = "1lbfcyjcsypjf06gs6qnf8dnf73yygpiyacwnl6qn9h11r1d3ffs";
+          rev = "sha256-2rnRQg4BJosNtZwpH+/zfhxnG3IWG/0McPJ6zaRnbtE=";
+          sha256 = "";
         };
 
         vendorSha256 = "sha256-qgSmTv7hO1rmOxCXBaDtbdlkUtKZ16zSu4S3SVKn3Ew=";
