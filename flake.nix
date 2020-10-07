@@ -142,7 +142,7 @@
           sha256 = "sha256-jPXkLlKdfOhPg7YEPacloLKvaMVXnicXNHdN+S9vots=";
         };
 
-        vendorSha256 = "sha256-qgSmTv7hO1rmOxCXBaDtbdlkUtKZ16zSu4S3SVKn3Ew=";
+        vendorSha256 = "sha256-1IOns/KL4/sZb2DgoXCRClTx1rbqz0x+rXZf/Ll34Ik=";
 
         doCheck = false;
 
