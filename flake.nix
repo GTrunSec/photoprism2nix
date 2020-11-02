@@ -29,8 +29,8 @@
           wantedBy = [ "multi-user.target" ];
 
           confinement = {
-	    enable = true;
-	    binSh = null;
+	          enable = true;
+	          binSh = null;
             packages = [
               pkgs.libtensorflow-bin
               pkgs.darktable
@@ -54,8 +54,8 @@
             User = "photoprism";
             #TemporaryFileSystem = [ "/" "/etc" ];
             #BindReadOnlyPaths = [
-              #"-/etc/hosts"
-              #"-/etc/resolv.conf"
+            #"-/etc/hosts"
+            #"-/etc/resolv.conf"
             #];
             ExecStart = mkDefault "${self.outputs.defaultPackage.x86_64-linux}/bin/photoprism start";
             #WorkingDirectory = "/var/lib/photoprism";
@@ -139,25 +139,25 @@
           owner = "photoprism";
           repo = "photoprism";
           rev = "c288dc37a9accbf61c557ff934e59b9ada39fc78";
-          sha256 = "sha256-jPXkLlKdfOhPg7YEPacloLKvaMVXnicXNHdN+S9vots=";
+          sha256 = "sha256-Vzty9Xh+QVfN/xPe0kW/kZUAMBEoOZyG2Rz525kOd+g=";
         };
 
-        vendorSha256 = "sha256-1IOns/KL4/sZb2DgoXCRClTx1rbqz0x+rXZf/Ll34Ik=";
+        vendorSha256 = "sha256-zVg8dttIT/28aBO2eL9U90stj6qtMbR+OvQKH32zUFo=";
 
         doCheck = false;
 
         subPackages = [ "cmd/photoprism" ];
 
-	#preBuild = ''
-          #patchShebangs ./
-	  #sed -i 's/\/tmp\/photoprism/\$\{tmp\}/' scripts/download-nsfw.sh
-	  #sed -i 's/\/tmp\/photoprism/\$\{tmp\}/' scripts/download-nasnet.sh
-	  #cd frontend
-	  #npm install
-	  #npm audit fix
-	  #make dep-go
-	  #make build-js
-	#'';
+	      #preBuild = ''
+        #patchShebangs ./
+	      #sed -i 's/\/tmp\/photoprism/\$\{tmp\}/' scripts/download-nsfw.sh
+	      #sed -i 's/\/tmp\/photoprism/\$\{tmp\}/' scripts/download-nasnet.sh
+	      #cd frontend
+	      #npm install
+	      #npm audit fix
+	      #make dep-go
+	      #make build-js
+	      #'';
 
         postInstall = ''
           mkdir -p $out/usr/lib/photoprism/assets/{,nasnet,nsfw}
@@ -165,15 +165,15 @@
         '';
 
         nativeBuildInputs = with pkgs; [ 
-	  nodejs
-	  unzip
-	  which
-	  wget
-	];
+	        nodejs
+	        unzip
+	        which
+	        wget
+	      ];
 
         buildInputs = with pkgs; [ 
-	  libtensorflow-bin
-	];
+	        libtensorflow-bin
+	      ];
       };
   };
 }
