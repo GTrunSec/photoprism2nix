@@ -1,7 +1,11 @@
 {
-  description = "Photo management software";
+  inputs = {
+    nixpkgs.url = "nixpkgs/8bdebd463bc77c9b83d66e690cba822a51c34b9b";
+    ranz2nix = { url = "github:andir/ranz2nix"; flake = false;};
+    photoprism = { url = "github:photoprism/photoprism"; flake = false;};
+  };
 
-  outputs = { self, nixpkgs }: {
+  outputs = inputs@{ self, nixpkgs, ranz2nix, photoprism }: {
 
     nixosModules.photoprism = { lib, pkgs, config, ... }: {
       options = with lib; {
@@ -25,7 +29,9 @@
 
         systemd.services.photoprism = {
           enable = true;
-          after = [ "network-online.target" "mysql.service" ];
+          after = [ "network-online.target"
+                    #"mysql.service"
+                  ];
           wantedBy = [ "multi-user.target" ];
 
           confinement = {
@@ -47,133 +53,160 @@
             pkgs.ffmpeg
             pkgs.exiftool
           ];
+            script = ''
+            exec ${self.outputs.defaultPackage.x86_64-linux}/bin/photoprism --assets-path ${self.outputs.defaultPackage.x86_64-linux.assets} start
+            '';
 
-          serviceConfig = {
-            Restart = "always";
-            RestartSec = "10";
-            User = "photoprism";
-            #TemporaryFileSystem = [ "/" "/etc" ];
-            #BindReadOnlyPaths = [
-            #"-/etc/hosts"
-            #"-/etc/resolv.conf"
-            #];
-            ExecStart = mkDefault "${self.outputs.defaultPackage.x86_64-linux}/bin/photoprism start";
-            #WorkingDirectory = "/var/lib/photoprism";
-            StateDirectory = "photoprism";
-            BindPaths = [
-              "/var/lib/photoprism"
-              "-/run/mysqld"
-              "-/var/run/mysqld"
-            ];
-            PrivateUsers = true;
-            PrivateDevices = true;
-            ProtectClock = true;
-            ProtectKernelLogs = true;
-            SystemCallArchitectures = "native";
-            RestrictNamespaces = true;
-            MemoryDenyWriteExecute = true;
-            CapabilityBoundingSet = [ "" ];
-            AmbientCapabilities = [ "" ];
-            #IPAddressDeny = "any";
-            #IPAddressAllow = "localhost";
-            RestrictAddressFamilies = "AF_UNIX AF_INET AF_INET6";
-            RestrictSUIDSGID = true;
-            NoNewPrivileges = true;
-            RemoveIPC = true;
-            LockPersonality = true;
-            ProtectHome = true;
-            ProtectHostname = true;
-            RestrictRealtime = true;
-            SystemCallFilter = [ "@system-service" "~@privileged" "~@resources" ];
-            SystemCallErrorNumber = "EPERM";
-          };
+            serviceConfig = {
+              User = "photoprism";
+              RuntimeDirectory = "photoprism";
+              CacheDirectory = "photoprism";
+              StateDirectory = "photoprism";
+              SyslogIdentifier = "photoprism";
+              PrivateTmp = true;
+            };
 
 
-          environment = {
+          environment = (
+            lib.mapAttrs' (n: v: lib.nameValuePair "PHOTOPRISM_${n}" (toString v)) {
             #HOME = "/var/lib/photoprism";
             SSL_CERT_DIR = "${pkgs.cacert}/etc/ssl/certs";
 
-            PHOTOPRISM_ADMIN_PASSWORD = "photoprism";
-            PHOTOPRISM_DARKTABLE_PRESETS = "false";
-            PHOTOPRISM_DATABASE_DRIVER = "mysql";
-            PHOTOPRISM_DATABASE_DSN = "photoprism@unix(/run/mysqld/mysqld.sock)/photoprism?charset=utf8mb4,utf8&parseTime=true";
-            PHOTOPRISM_DEBUG = "true";
-            PHOTOPRISM_DETECT_NSFW = "true";
-            PHOTOPRISM_EXPERIMENTAL = "true";
-            PHOTOPRISM_WORKERS = "8";
-            PHOTOPRISM_ORIGINALS_LIMIT = "1000000";
-            PHOTOPRISM_HTTP_HOST = "127.0.0.1";
-            PHOTOPRISM_HTTP_PORT = "2342";
-            PHOTOPRISM_HTTP_MODE = "release";
-            PHOTOPRISM_JPEG_QUALITY = "92";
-            PHOTOPRISM_JPEG_SIZE = "7680";
-            PHOTOPRISM_PUBLIC = "false";
-            PHOTOPRISM_READONLY = "false";
-            PHOTOPRISM_TENSORFLOW_OFF = "true";
-            PHOTOPRISM_SIDECAR_JSON = "true";
-            PHOTOPRISM_SIDECAR_YAML = "true";
-            PHOTOPRISM_SETTINGS_HIDDEN = "false";
-            PHOTOPRISM_SITE_CAPTION = "Browse Your Life";
-            PHOTOPRISM_SITE_TITLE = "PhotoPrism";
-            PHOTOPRISM_SITE_URL = "http://127.0.0.1:2342/";
-            PHOTOPRISM_STORAGE_PATH = "/var/lib/photoprism/storage";
-            #PHOTOPRISM_ASSETS_PATH = "${self.outputs.defaultPackage.x86_64-linux}/usr/lib/photoprism/assets";
-            PHOTOPRISM_ASSETS_PATH = "/var/lib/photoprism/assets";
-            PHOTOPRISM_ORIGINALS_PATH = "/var/lib/photoprism/originals";
-            PHOTOPRISM_IMPORT_PATH = "/var/lib/photoprism/import";
-            PHOTOPRISM_THUMB_FILTER = "linear";
-            PHOTOPRISM_THUMB_SIZE = "2048";
-            PHOTOPRISM_THUMB_SIZE_UNCACHED = "7680";
-            PHOTOPRISM_THUMB_UNCACHED = "true";
-            PHOTOPRISM_UPLOAD_NSFW = "true";
-          };
+            ADMIN_PASSWORD = "photoprism";
+            DARKTABLE_PRESETS = "false";
+            #DATABASE_DRIVER = "mysql";
+            DATABASE_DRIVER = "sqlite";
+
+            DATABASE_DSN = "/var/lib/photoprism/photoprism.sqlite";
+            #DATABASE_DSN = "photoprism@unix(/run/mysqld/mysqld.sock)/photoprism?charset=utf8mb4,utf8&parseTime=true";
+            DEBUG = "true";
+            DETECT_NSFW = "true";
+            EXPERIMENTAL = "true";
+            WORKERS = "8";
+            ORIGINALS_LIMIT = "1000000";
+            HTTP_HOST = "127.0.0.1";
+            HTTP_PORT = "2342";
+            HTTP_MODE = "release";
+            JPEG_QUALITY = "92";
+            JPEG_SIZE = "7680";
+            PUBLIC = "false";
+            READONLY = "false";
+            TENSORFLOW_OFF = "true";
+            SIDECAR_JSON = "true";
+            SIDECAR_YAML = "true";
+            SIDECAR_PATH = "/var/lib/photoprism/sidecar";
+            SETTINGS_HIDDEN = "false";
+            SITE_CAPTION = "Browse Your Life";
+            SITE_TITLE = "PhotoPrism";
+            SITE_URL = "http://127.0.0.1:2342/";
+            STORAGE_PATH = "/var/lib/photoprism/storage";
+            ASSETS_PATH = "${self.outputs.defaultPackage.x86_64-linux.assets}";
+            ORIGINALS_PATH = "/var/lib/photoprism/originals";
+            IMPORT_PATH = "/var/lib/photoprism/import";
+            THUMB_FILTER = "linear";
+            THUMB_SIZE = "2048";
+            THUMB_SIZE_UNCACHED = "7680";
+            THUMB_UNCACHED = "true";
+            UPLOAD_NSFW = "true";
+            }
+          );
         };
       };
     };
 
     defaultPackage.x86_64-linux =
-      with import nixpkgs { system = "x86_64-linux"; };
-      buildGoModule {
-        name = "photoprism";
+      with import nixpkgs { system = "x86_64-linux"; overlays = [(import ./overlay.nix)];};
+      let
         src = pkgs.fetchFromGitHub {
           owner = "photoprism";
           repo = "photoprism";
-          rev = "c288dc37a9accbf61c557ff934e59b9ada39fc78";
-          sha256 = "sha256-Vzty9Xh+QVfN/xPe0kW/kZUAMBEoOZyG2Rz525kOd+g=";
+          rev = photoprism.rev;
+          sha256 = photoprism.narHash;
         };
+      in
+        buildGoModule {
+          name = "photoprism";
+          inherit src;
+          goPackagePath = "github.com/photoprism/photoprism";
+          subPackages = [ "cmd/photoprism" ];
 
-        vendorSha256 = "sha256-zVg8dttIT/28aBO2eL9U90stj6qtMbR+OvQKH32zUFo=";
+          buildInputs = [ libtensorflow-bin ];
 
-        doCheck = false;
+          prePatch = ''
+          substituteInPlace internal/commands/passwd.go --replace '/bin/stty' "${coreutils}/bin/stty"
+          sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
+          '';
 
-        subPackages = [ "cmd/photoprism" ];
+          vendorSha256 = "0njhndyiy2pl79zb8cddma7jsjzpajzpidhkd2ygsks8vdv3qn6d";
 
-	      #preBuild = ''
-        #patchShebangs ./
-	      #sed -i 's/\/tmp\/photoprism/\$\{tmp\}/' scripts/download-nsfw.sh
-	      #sed -i 's/\/tmp\/photoprism/\$\{tmp\}/' scripts/download-nasnet.sh
-	      #cd frontend
-	      #npm install
-	      #npm audit fix
-	      #make dep-go
-	      #make build-js
-	      #'';
+          passthru = rec {
 
-        postInstall = ''
-          mkdir -p $out/usr/lib/photoprism/assets/{,nasnet,nsfw}
-          cp -r $src/assets/static $src/assets/profiles $src/assets/templates $out/usr/lib/photoprism/assets
-        '';
+            frontend =
+              let
+                noderanz = callPackage ranz2nix {
+                  nodejs = nodejs-12_x;
+                  sourcePath = src + "/frontend";
+                  packageOverride = name: spec:
+                    if name == "minimist" && spec ? resolved && spec.resolved == "" && spec.version == "1.2.0" then {
+                      resolved = "file://" + (
+                        toString (
+                          fetchurl {
+                            url = "https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz";
+                            sha256 = "0w7jll4vlqphxgk9qjbdjh3ni18lkrlfaqgsm7p14xl3f7ghn3gc";
+                          }
+                        )
+                      );
+                    } else { };
+                };
+                node_modules = noderanz.patchedBuild;
+              in
+                stdenv.mkDerivation {
+                  name = "photoprism-frontend";
+                  nativeBuildInputs = [ nodejs-12_x ];
 
-        nativeBuildInputs = with pkgs; [ 
-	        nodejs
-	        unzip
-	        which
-	        wget
-	      ];
+                  inherit src;
 
-        buildInputs = with pkgs; [ 
-	        libtensorflow-bin
-	      ];
-      };
+                  sourceRoot = "source/frontend";
+
+                  postUnpack = ''
+                            chmod -R +rw .
+               '';
+
+                  NODE_ENV = "production";
+
+                  buildPhase = ''
+                 export HOME=$(mktemp -d)
+                 ln -sf ${node_modules}/node_modules node_modules
+                 ln -sf ${node_modules.lockFile} package-lock.json
+                 npm run build
+                 '';
+                  installPhase = ''
+                  cp -rv ../assets/static/build $out
+                  '';
+                };
+
+            assets =
+              let
+                nasnet = fetchzip {
+                  url = "https://dl.photoprism.org/tensorflow/nasnet.zip";
+                  sha256 = "09cnr2wpc09xrv1crms3mfcl61rxf4nr5j51ppy4ng6bxg9rq5s1";
+                };
+
+                nsfw = fetchzip {
+                  url = "https://dl.photoprism.org/tensorflow/nsfw.zip";
+                  sha256 = "0j0r39cgrr0zf2sc1hpr8jh19lr3jxdw9wz6sq3s7kkqay324ab8";
+                };
+
+              in
+                runCommand "photoprims-assets" { } ''
+                cp -rv ${src}/assets $out
+                chmod -R +rw $out
+                rm -rf $out/static/build
+                cp -rv ${frontend} $out/static/build
+                ln -s ${nsfw} $out/nsfw
+                ln -s ${nasnet} $out/nasnet
+                '';
+          };
+        };
   };
 }
