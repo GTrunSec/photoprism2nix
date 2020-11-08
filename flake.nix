@@ -9,16 +9,19 @@
 
     nixosModules.photoprism = { lib, pkgs, config, ... }: {
       options = with lib; {
-        services.photoprism = mkOption {
-          default = { };
-          type = types.loaOf (types.submodule ({ name, ... }: {
-            options = {
-              enable = mkOption {
-                type = types.bool;
-                default = false;
-              };
-            };
-          }));
+        services.photoprism = {
+          enable = mkOption {
+            type = types.bool;
+            default = false;
+          };
+          port = mkOption {
+            type = types.str;
+            default = "2342";
+          };
+          http_host = mkOption {
+            type = types.str;
+            default = "127.0.0.1";
+          };
         };
       };
 
@@ -84,8 +87,8 @@
             EXPERIMENTAL = "true";
             WORKERS = "8";
             ORIGINALS_LIMIT = "1000000";
-            HTTP_HOST = "127.0.0.1";
-            HTTP_PORT = "2342";
+            HTTP_HOST = "${config.services.photoprism.http_host}";
+            HTTP_PORT = "${config.services.photoprism.port}";
             HTTP_MODE = "release";
             JPEG_QUALITY = "92";
             JPEG_SIZE = "7680";
