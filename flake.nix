@@ -140,7 +140,7 @@
           sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
           '';
 
-          vendorSha256 = "0njhndyiy2pl79zb8cddma7jsjzpajzpidhkd2ygsks8vdv3qn6d";
+          vendorSha256 = "sha256-KVHtTiqKq0P7pQwQTSksNyzAbxevV/fq7YMFUGiGgVQ=";
 
           passthru = rec {
 

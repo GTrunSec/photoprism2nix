@@ -18,11 +18,11 @@
     "photoprism": {
       "flake": false,
       "locked": {
-        "lastModified": 1604273426,
-        "narHash": "sha256-Ra57ch8xemZQiu8O11Hygp0dhi4XFaRs+MEFGMTrRqc=",
+        "lastModified": 1608402038,
+        "narHash": "sha256-CyLpeqoE71vTNZJbT5pPhVr52Zzob+8YRAD6y7uogyk=",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "b540e4ec0352b62a96ccc357ee405af8e3d289d6",
+        "rev": "b59ecff6ef871e517264567f16158ad309ad46d1",
         "type": "github"
       },
       "original": {
