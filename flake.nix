@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "nixpkgs/8bdebd463bc77c9b83d66e690cba822a51c34b9b";
+    nixpkgs.url = "nixpkgs/7ff5e241a2b96fff7912b7d793a06b4374bd846c";
     ranz2nix = { url = "github:andir/ranz2nix"; flake = false;};
     photoprism = { url = "github:photoprism/photoprism"; flake = false;};
   };
@@ -56,61 +56,61 @@
             pkgs.ffmpeg
             pkgs.exiftool
           ];
-            script = ''
+          script = ''
             exec ${self.outputs.defaultPackage.x86_64-linux}/bin/photoprism --assets-path ${self.outputs.defaultPackage.x86_64-linux.assets} start
             '';
 
-            serviceConfig = {
-              User = "photoprism";
-              RuntimeDirectory = "photoprism";
-              CacheDirectory = "photoprism";
-              StateDirectory = "photoprism";
-              SyslogIdentifier = "photoprism";
-              PrivateTmp = true;
-            };
+          serviceConfig = {
+            User = "photoprism";
+            RuntimeDirectory = "photoprism";
+            CacheDirectory = "photoprism";
+            StateDirectory = "photoprism";
+            SyslogIdentifier = "photoprism";
+            PrivateTmp = true;
+          };
 
 
           environment = (
             lib.mapAttrs' (n: v: lib.nameValuePair "PHOTOPRISM_${n}" (toString v)) {
-            #HOME = "/var/lib/photoprism";
-            SSL_CERT_DIR = "${pkgs.cacert}/etc/ssl/certs";
+              #HOME = "/var/lib/photoprism";
+              SSL_CERT_DIR = "${pkgs.cacert}/etc/ssl/certs";
 
-            ADMIN_PASSWORD = "photoprism";
-            DARKTABLE_PRESETS = "false";
-            #DATABASE_DRIVER = "mysql";
-            DATABASE_DRIVER = "sqlite";
+              ADMIN_PASSWORD = "photoprism";
+              DARKTABLE_PRESETS = "false";
+              #DATABASE_DRIVER = "mysql";
+              DATABASE_DRIVER = "sqlite";
 
-            DATABASE_DSN = "/var/lib/photoprism/photoprism.sqlite";
-            #DATABASE_DSN = "photoprism@unix(/run/mysqld/mysqld.sock)/photoprism?charset=utf8mb4,utf8&parseTime=true";
-            DEBUG = "true";
-            DETECT_NSFW = "true";
-            EXPERIMENTAL = "true";
-            WORKERS = "8";
-            ORIGINALS_LIMIT = "1000000";
-            HTTP_HOST = "${config.services.photoprism.http_host}";
-            HTTP_PORT = "${config.services.photoprism.port}";
-            HTTP_MODE = "release";
-            JPEG_QUALITY = "92";
-            JPEG_SIZE = "7680";
-            PUBLIC = "false";
-            READONLY = "false";
-            TENSORFLOW_OFF = "true";
-            SIDECAR_JSON = "true";
-            SIDECAR_YAML = "true";
-            SIDECAR_PATH = "/var/lib/photoprism/sidecar";
-            SETTINGS_HIDDEN = "false";
-            SITE_CAPTION = "Browse Your Life";
-            SITE_TITLE = "PhotoPrism";
-            SITE_URL = "http://127.0.0.1:2342/";
-            STORAGE_PATH = "/var/lib/photoprism/storage";
-            ASSETS_PATH = "${self.outputs.defaultPackage.x86_64-linux.assets}";
-            ORIGINALS_PATH = "/var/lib/photoprism/originals";
-            IMPORT_PATH = "/var/lib/photoprism/import";
-            THUMB_FILTER = "linear";
-            THUMB_SIZE = "2048";
-            THUMB_SIZE_UNCACHED = "7680";
-            THUMB_UNCACHED = "true";
-            UPLOAD_NSFW = "true";
+              DATABASE_DSN = "/var/lib/photoprism/photoprism.sqlite";
+              #DATABASE_DSN = "photoprism@unix(/run/mysqld/mysqld.sock)/photoprism?charset=utf8mb4,utf8&parseTime=true";
+              DEBUG = "true";
+              DETECT_NSFW = "true";
+              EXPERIMENTAL = "true";
+              WORKERS = "8";
+              ORIGINALS_LIMIT = "1000000";
+              HTTP_HOST = "${config.services.photoprism.http_host}";
+              HTTP_PORT = "${config.services.photoprism.port}";
+              HTTP_MODE = "release";
+              JPEG_QUALITY = "92";
+              JPEG_SIZE = "7680";
+              PUBLIC = "false";
+              READONLY = "false";
+              TENSORFLOW_OFF = "true";
+              SIDECAR_JSON = "true";
+              SIDECAR_YAML = "true";
+              SIDECAR_PATH = "/var/lib/photoprism/sidecar";
+              SETTINGS_HIDDEN = "false";
+              SITE_CAPTION = "Browse Your Life";
+              SITE_TITLE = "PhotoPrism";
+              SITE_URL = "http://127.0.0.1:2342/";
+              STORAGE_PATH = "/var/lib/photoprism/storage";
+              ASSETS_PATH = "${self.outputs.defaultPackage.x86_64-linux.assets}";
+              ORIGINALS_PATH = "/var/lib/photoprism/originals";
+              IMPORT_PATH = "/var/lib/photoprism/import";
+              THUMB_FILTER = "linear";
+              THUMB_SIZE = "2048";
+              THUMB_SIZE_UNCACHED = "7680";
+              THUMB_UNCACHED = "true";
+              UPLOAD_NSFW = "true";
             }
           );
         };
@@ -172,8 +172,8 @@
                   sourceRoot = "source/frontend";
 
                   postUnpack = ''
-                            chmod -R +rw .
-               '';
+                   chmod -R +rw .
+                 '';
 
                   NODE_ENV = "production";
 
