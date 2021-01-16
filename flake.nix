@@ -130,7 +130,7 @@
         buildGoModule {
           name = "photoprism";
           inherit src;
-          goPackagePath = "github.com/photoprism/photoprism";
+
           subPackages = [ "cmd/photoprism" ];
 
           buildInputs = [ libtensorflow-bin ];
