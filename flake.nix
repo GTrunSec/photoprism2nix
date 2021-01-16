@@ -2,7 +2,7 @@
   inputs = {
     nixpkgs.url = "nixpkgs/7ff5e241a2b96fff7912b7d793a06b4374bd846c";
     ranz2nix = { url = "github:andir/ranz2nix"; flake = false;};
-    photoprism = { url = "github:photoprism/photoprism"; flake = false;};
+    photoprism = { url = "github:photoprism/photoprism/cc05c430535013fd10ca340220d8c1794d572d57"; flake = false;};
   };
 
   outputs = inputs@{ self, nixpkgs, ranz2nix, photoprism }: {
@@ -140,7 +140,7 @@
           sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
           '';
 
-          vendorSha256 = "sha256-KVHtTiqKq0P7pQwQTSksNyzAbxevV/fq7YMFUGiGgVQ=";
+          vendorSha256 = "sha256-j1jD3nCTMy/38A/DzdWIfRrvvVsmi3aHGUGrH4Zjsdc=";
 
           passthru = rec {
 
