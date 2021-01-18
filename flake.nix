@@ -211,5 +211,6 @@
                 '';
           };
         };
+    checks.x86_64-linux.build = self.defaultPackage.x86_64-linux;
   };
 }
