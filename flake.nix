@@ -7,6 +7,10 @@
 
   outputs = inputs@{ self, nixpkgs, ranz2nix, photoprism }: {
 
+    overlay = final: prev: {
+       photoprism = self.defaultPackage.x86_64-linux;
+    };
+
     nixosModules.photoprism = { lib, pkgs, config, ... }: {
       options = with lib; {
         services.photoprism = {
