@@ -11,5 +11,5 @@ let
   ranz2nix = loadInput flakeLock.nodes.ranz2nix;
 in
 rec {
-  ranz2nix = prev.callPackage "${ranz2nix}" {};
+  ranz2nix = prev.callPackage "${ranz2nix}" { };
 }
