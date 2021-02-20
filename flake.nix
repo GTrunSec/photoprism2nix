@@ -26,7 +26,8 @@
           checks = packages.photoprism;
           devShell = mkShell {
             shellHook = ''
-              ${pkgs.photoprism}/bin/photophrism --admin-password photoprism --import-path ${pkgs.photoprism.assets} start
+              ${pkgs.photoprism}/bin/photoprism --admin-password photoprism --import-path ~/Pictures \
+               --assets-path ${pkgs.photoprism.assets} start
             '';
           };
         }
