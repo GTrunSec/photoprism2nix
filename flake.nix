@@ -7,7 +7,7 @@
   };
 
   outputs = inputs@{ self, nixpkgs, ranz2nix, photoprism, flake-utils }:
-    flake-utils.lib.eachDefaultSystem
+    flake-utils.lib.eachSystem [ "x86_64-linux" ]
       (
         system:
         let
@@ -23,7 +23,9 @@
             photoprism = pkgs.photoprism;
           };
           defaultPackage = packages.photoprism;
-          checks = packages.photoprism;
+
+          checks.build = packages.photoprism;
+
           devShell = mkShell {
             shellHook = ''
               ${pkgs.photoprism}/bin/photoprism --admin-password photoprism --import-path ~/Pictures \
