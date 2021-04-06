@@ -57,6 +57,14 @@
                 default = "127.0.0.1";
               };
 
+              dataDir = mkOption {
+                type = types.path;
+                default = "/var/lib/photoprism";
+                description = ''
+                  Data directory for photoprism
+                '';
+              };
+
               package = mkOption {
                 type = types.package;
                 default = self.outputs.packages."${pkgs.system}".photoprism;
@@ -114,7 +122,7 @@
 
               environment = (
                 lib.mapAttrs' (n: v: lib.nameValuePair "PHOTOPRISM_${n}" (toString v)) {
-                  #HOME = "/var/lib/photoprism";
+                  #HOME = "${cfg.dataDir}";
                   SSL_CERT_DIR = "${pkgs.cacert}/etc/ssl/certs";
 
                   ADMIN_PASSWORD = "photoprism";
@@ -122,7 +130,7 @@
                   #DATABASE_DRIVER = "mysql";
                   DATABASE_DRIVER = "sqlite";
 
-                  DATABASE_DSN = "/var/lib/photoprism/photoprism.sqlite";
+                  DATABASE_DSN = "${cfg.dataDir}/photoprism.sqlite";
                   #DATABASE_DSN = "photoprism@unix(/run/mysqld/mysqld.sock)/photoprism?charset=utf8mb4,utf8&parseTime=true";
                   DEBUG = "true";
                   DETECT_NSFW = "true";
@@ -139,15 +147,15 @@
                   TENSORFLOW_OFF = "true";
                   SIDECAR_JSON = "true";
                   SIDECAR_YAML = "true";
-                  SIDECAR_PATH = "/var/lib/photoprism/sidecar";
+                  SIDECAR_PATH = "${cfg.dataDir}/sidecar";
                   SETTINGS_HIDDEN = "false";
                   SITE_CAPTION = "Browse Your Life";
                   SITE_TITLE = "PhotoPrism";
                   SITE_URL = "http://127.0.0.1:2342/";
-                  STORAGE_PATH = "/var/lib/photoprism/storage";
+                  STORAGE_PATH = "${cfg.dataDir}/storage";
                   ASSETS_PATH = "${cfg.package.assets}";
-                  ORIGINALS_PATH = "/var/lib/photoprism/originals";
-                  IMPORT_PATH = "/var/lib/photoprism/import";
+                  ORIGINALS_PATH = "${cfg.dataDir}/originals";
+                  IMPORT_PATH = "${cfg.dataDir}/import";
                   THUMB_FILTER = "linear";
                   THUMB_SIZE = "2048";
                   THUMB_SIZE_UNCACHED = "7680";
