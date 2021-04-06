@@ -22,6 +22,7 @@
           packages = flake-utils.lib.flattenTree {
             photoprism = pkgs.photoprism;
           };
+
           defaultPackage = packages.photoprism;
 
           checks.build = packages.photoprism;
@@ -34,116 +35,129 @@
           };
         }
       ) // {
-      nixosModules.photoprism = { lib, pkgs, config, ... }: {
-        options = with lib; {
-          services.photoprism = {
-            enable = mkOption {
-              type = types.bool;
-              default = false;
-            };
-            port = mkOption {
-              type = types.str;
-              default = "2342";
-            };
-            http_host = mkOption {
-              type = types.str;
-              default = "127.0.0.1";
+      nixosModules.photoprism = { lib, pkgs, config, ... }:
+        let
+          cfg = config.services.photoprism;
+        in
+        {
+          options = with lib; {
+            services.photoprism = {
+              enable = mkOption {
+                type = types.bool;
+                default = false;
+              };
+
+              port = mkOption {
+                type = types.str;
+                default = "2342";
+              };
+
+              http_host = mkOption {
+                type = types.str;
+                default = "127.0.0.1";
+              };
+
+              package = mkOption {
+                type = types.package;
+                default = self.outputs.packages."${pkgs.system}".photoprism;
+                description = "The photoprism package.";
+              };
             };
           };
-        };
 
-        config = with lib; {
-          users.users.photoprism = { isSystemUser = true; group = "photoprism"; };
+          config = with lib; {
+            users.users.photoprism = { isSystemUser = true; group = "photoprism"; };
 
-          users.groups.photoprism = { };
+            users.groups.photoprism = { };
 
-          systemd.services.photoprism = {
-            enable = true;
-            after = [
-              "network-online.target"
-              #"mysql.service"
-            ];
-            wantedBy = [ "multi-user.target" ];
-
-            confinement = {
+            systemd.services.photoprism = {
               enable = true;
-              binSh = null;
-              packages = [
+              after = [
+                "network-online.target"
+                #"mysql.service"
+              ];
+              wantedBy = [ "multi-user.target" ];
+
+              confinement = {
+                enable = true;
+                binSh = null;
+                packages = [
+                  pkgs.libtensorflow-bin
+                  pkgs.darktable
+                  pkgs.ffmpeg
+                  pkgs.exiftool
+                  self.outputs.defaultPackage.x86_64-linux
+                  pkgs.cacert
+                ];
+              };
+
+              path = [
                 pkgs.libtensorflow-bin
                 pkgs.darktable
                 pkgs.ffmpeg
                 pkgs.exiftool
-                self.outputs.defaultPackage.x86_64-linux
-                pkgs.cacert
               ];
+
+              script = ''
+                exec ${cfg.package}/bin/photoprism --assets-path ${cfg.package.assets} start
+              '';
+
+              serviceConfig = {
+                User = "photoprism";
+                RuntimeDirectory = "photoprism";
+                CacheDirectory = "photoprism";
+                StateDirectory = "photoprism";
+                SyslogIdentifier = "photoprism";
+                PrivateTmp = true;
+              };
+
+
+              environment = (
+                lib.mapAttrs' (n: v: lib.nameValuePair "PHOTOPRISM_${n}" (toString v)) {
+                  #HOME = "/var/lib/photoprism";
+                  SSL_CERT_DIR = "${pkgs.cacert}/etc/ssl/certs";
+
+                  ADMIN_PASSWORD = "photoprism";
+                  DARKTABLE_PRESETS = "false";
+                  #DATABASE_DRIVER = "mysql";
+                  DATABASE_DRIVER = "sqlite";
+
+                  DATABASE_DSN = "/var/lib/photoprism/photoprism.sqlite";
+                  #DATABASE_DSN = "photoprism@unix(/run/mysqld/mysqld.sock)/photoprism?charset=utf8mb4,utf8&parseTime=true";
+                  DEBUG = "true";
+                  DETECT_NSFW = "true";
+                  EXPERIMENTAL = "true";
+                  WORKERS = "8";
+                  ORIGINALS_LIMIT = "1000000";
+                  HTTP_HOST = "${cfg.http_host}";
+                  HTTP_PORT = "${cfg.port}";
+                  HTTP_MODE = "release";
+                  JPEG_QUALITY = "92";
+                  JPEG_SIZE = "7680";
+                  PUBLIC = "false";
+                  READONLY = "false";
+                  TENSORFLOW_OFF = "true";
+                  SIDECAR_JSON = "true";
+                  SIDECAR_YAML = "true";
+                  SIDECAR_PATH = "/var/lib/photoprism/sidecar";
+                  SETTINGS_HIDDEN = "false";
+                  SITE_CAPTION = "Browse Your Life";
+                  SITE_TITLE = "PhotoPrism";
+                  SITE_URL = "http://127.0.0.1:2342/";
+                  STORAGE_PATH = "/var/lib/photoprism/storage";
+                  ASSETS_PATH = "${cfg.package.assets}";
+                  ORIGINALS_PATH = "/var/lib/photoprism/originals";
+                  IMPORT_PATH = "/var/lib/photoprism/import";
+                  THUMB_FILTER = "linear";
+                  THUMB_SIZE = "2048";
+                  THUMB_SIZE_UNCACHED = "7680";
+                  THUMB_UNCACHED = "true";
+                  UPLOAD_NSFW = "true";
+                }
+              );
             };
-
-            path = [
-              pkgs.libtensorflow-bin
-              pkgs.darktable
-              pkgs.ffmpeg
-              pkgs.exiftool
-            ];
-            script = ''
-              exec ${self.outputs.defaultPackage.x86_64-linux}/bin/photoprism --assets-path ${self.outputs.defaultPackage.x86_64-linux.assets} start
-            '';
-
-            serviceConfig = {
-              User = "photoprism";
-              RuntimeDirectory = "photoprism";
-              CacheDirectory = "photoprism";
-              StateDirectory = "photoprism";
-              SyslogIdentifier = "photoprism";
-              PrivateTmp = true;
-            };
-
-
-            environment = (
-              lib.mapAttrs' (n: v: lib.nameValuePair "PHOTOPRISM_${n}" (toString v)) {
-                #HOME = "/var/lib/photoprism";
-                SSL_CERT_DIR = "${pkgs.cacert}/etc/ssl/certs";
-
-                ADMIN_PASSWORD = "photoprism";
-                DARKTABLE_PRESETS = "false";
-                #DATABASE_DRIVER = "mysql";
-                DATABASE_DRIVER = "sqlite";
-
-                DATABASE_DSN = "/var/lib/photoprism/photoprism.sqlite";
-                #DATABASE_DSN = "photoprism@unix(/run/mysqld/mysqld.sock)/photoprism?charset=utf8mb4,utf8&parseTime=true";
-                DEBUG = "true";
-                DETECT_NSFW = "true";
-                EXPERIMENTAL = "true";
-                WORKERS = "8";
-                ORIGINALS_LIMIT = "1000000";
-                HTTP_HOST = "${config.services.photoprism.http_host}";
-                HTTP_PORT = "${config.services.photoprism.port}";
-                HTTP_MODE = "release";
-                JPEG_QUALITY = "92";
-                JPEG_SIZE = "7680";
-                PUBLIC = "false";
-                READONLY = "false";
-                TENSORFLOW_OFF = "true";
-                SIDECAR_JSON = "true";
-                SIDECAR_YAML = "true";
-                SIDECAR_PATH = "/var/lib/photoprism/sidecar";
-                SETTINGS_HIDDEN = "false";
-                SITE_CAPTION = "Browse Your Life";
-                SITE_TITLE = "PhotoPrism";
-                SITE_URL = "http://127.0.0.1:2342/";
-                STORAGE_PATH = "/var/lib/photoprism/storage";
-                ASSETS_PATH = "${self.outputs.defaultPackage.x86_64-linux.assets}";
-                ORIGINALS_PATH = "/var/lib/photoprism/originals";
-                IMPORT_PATH = "/var/lib/photoprism/import";
-                THUMB_FILTER = "linear";
-                THUMB_SIZE = "2048";
-                THUMB_SIZE_UNCACHED = "7680";
-                THUMB_UNCACHED = "true";
-                UPLOAD_NSFW = "true";
-              }
-            );
           };
         };
-      };
 
       overlay = final: prev: {
         photoprism = with final;

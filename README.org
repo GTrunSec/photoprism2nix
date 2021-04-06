@@ -1,0 +1,36 @@
+#+TITLE: README
+
+* Modules Test
+
+
+#+begin_src sh :async t :exports both :results output
+systemctl status photoprism.service
+#+end_src
+
+#+RESULTS:
+#+begin_example
+● photoprism.service
+     Loaded: loaded (/nix/store/narmv6gkhdryrx4a8f9j7jplf6ifl0ak-photoprism-chroot-paths/lib/systemd/system/photoprism.service; enabled; vendor preset: enabled)
+    Drop-In: /nix/store/rghm1g5zn25pc9ddi36n7lj6g3izfrh3-system-units/photoprism.service.d
+             └─overrides.conf
+     Active: active (running) since Mon 2021-04-05 11:59:26 PDT; 9h ago
+   Main PID: 2471 (photoprism)
+         IP: 1018.0K in, 81.2K out
+         IO: 83.6M read, 95.1M written
+      Tasks: 18 (limit: 4915)
+     Memory: 218.8M
+        CPU: 24.852s
+     CGroup: /system.slice/photoprism.service
+             └─2471 /nix/store/2pjwd95ilvz3ji8vsaiv3s8v4a76yf09-photoprism/bin/photoprism --assets-path /nix/store/694ipsa92251kx8npq6sniqhlikc8sl8-photoprims-assets start
+
+Apr 05 21:29:30 NixOS photoprism[2471]: time="2021-04-06T04:29:30Z" level=debug msg="metadata: starting routine check"
+Apr 05 21:29:30 NixOS photoprism[2471]: time="2021-04-06T04:29:30Z" level=debug msg="moments: index contains 638 photos and 38 videos, using threshold 10"
+Apr 05 21:29:31 NixOS photoprism[2471]: time="2021-04-06T04:29:31Z" level=debug msg="moments: updated “Bays, Capes & Beaches” (public:true label:beach|seashore)"
+Apr 05 21:29:31 NixOS photoprism[2471]: time="2021-04-06T04:29:31Z" level=debug msg="moments: updated “Bays, Capes & Beaches” (public:true label:beach|seashore)"
+Apr 05 21:29:31 NixOS photoprism[2471]: time="2021-04-06T04:29:31Z" level=debug msg="moments: 110 albums saved as yaml files"
+Apr 05 21:44:30 NixOS photoprism[2471]: time="2021-04-06T04:44:30Z" level=debug msg="metadata: starting routine check"
+Apr 05 21:44:30 NixOS photoprism[2471]: time="2021-04-06T04:44:30Z" level=debug msg="moments: index contains 638 photos and 38 videos, using threshold 10"
+Apr 05 21:44:31 NixOS photoprism[2471]: time="2021-04-06T04:44:31Z" level=debug msg="moments: updated “Bays, Capes & Beaches” (public:true label:beach|seashore)"
+Apr 05 21:44:31 NixOS photoprism[2471]: time="2021-04-06T04:44:31Z" level=debug msg="moments: updated “Bays, Capes & Beaches” (public:true label:beach|seashore)"
+Apr 05 21:44:31 NixOS photoprism[2471]: time="2021-04-06T04:44:31Z" level=debug msg="moments: 110 albums saved as yaml files"
+#+end_example
