@@ -94,7 +94,7 @@
                   pkgs.darktable
                   pkgs.ffmpeg
                   pkgs.exiftool
-                  self.outputs.defaultPackage.x86_64-linux
+                  cfg.package
                   pkgs.cacert
                 ];
               };
