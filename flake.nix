@@ -57,6 +57,11 @@
                 default = "127.0.0.1";
               };
 
+              password = mkOption {
+                type = types.str;
+                default = "photoprism";
+              };
+
               dataDir = mkOption {
                 type = types.path;
                 default = "/var/lib/photoprism";
@@ -125,7 +130,7 @@
                   #HOME = "${cfg.dataDir}";
                   SSL_CERT_DIR = "${pkgs.cacert}/etc/ssl/certs";
 
-                  ADMIN_PASSWORD = "photoprism";
+                  ADMIN_PASSWORD = "${cfg.password}";
                   DARKTABLE_PRESETS = "false";
                   #DATABASE_DRIVER = "mysql";
                   DATABASE_DRIVER = "sqlite";
