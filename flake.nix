@@ -47,6 +47,11 @@
                 default = false;
               };
 
+              mysql = mkOption {
+                type = types.bool;
+                default = false;
+              };
+
               port = mkOption {
                 type = types.str;
                 default = "2342";
@@ -58,7 +63,7 @@
               };
 
               password = mkOption {
-                type = types.str;
+                type = types.str or types.path;
                 default = "photoprism";
               };
 
@@ -83,11 +88,23 @@
 
             users.groups.photoprism = { };
 
+            services.mysql = mkIf cfg.mysql {
+              enable = true;
+              package = mkDefault pkgs.mysql;
+              ensureDatabases = [ "photoprism" ];
+              ensureUsers = [{
+                name = "photoprism";
+                ensurePermissions = { "photoprism.*" = "ALL PRIVILEGES"; };
+              }];
+            };
+
             systemd.services.photoprism = {
               enable = true;
               after = [
                 "network-online.target"
-                #"mysql.service"
+                (if cfg.mysql then
+                  "mysql.service"
+                else "")
               ];
               wantedBy = [ "multi-user.target" ];
 
@@ -111,17 +128,43 @@
                 pkgs.exiftool
               ];
 
-              script = ''
-                exec ${cfg.package}/bin/photoprism --assets-path ${cfg.package.assets} start
-              '';
+              script =
+                ''
+                  exec ${cfg.package}/bin/photoprism --assets-path ${cfg.package.assets} start
+                '';
 
               serviceConfig = {
                 User = "photoprism";
+                BindPaths = [
+                  "/var/lib/photoprism"
+                ] ++ lib.optionals cfg.mysql [
+                  "-/run/mysqld"
+                  "-/var/run/mysqld"
+                ];
                 RuntimeDirectory = "photoprism";
                 CacheDirectory = "photoprism";
                 StateDirectory = "photoprism";
                 SyslogIdentifier = "photoprism";
+                #Sops secrets PHOTOPRISM_ADMIN_PASSWORD= /****/
+                EnvironmentFile = "${cfg.dataDir}/keyFile";
                 PrivateTmp = true;
+                PrivateUsers = true;
+                PrivateDevices = true;
+                ProtectClock = true;
+                ProtectKernelLogs = true;
+                SystemCallArchitectures = "native";
+                RestrictNamespaces = true;
+                MemoryDenyWriteExecute = true;
+                RestrictAddressFamilies = "AF_UNIX AF_INET AF_INET6";
+                RestrictSUIDSGID = true;
+                NoNewPrivileges = true;
+                RemoveIPC = true;
+                LockPersonality = true;
+                ProtectHome = true;
+                ProtectHostname = true;
+                RestrictRealtime = true;
+                SystemCallFilter = [ "@system-service" "~@privileged" "~@resources" ];
+                SystemCallErrorNumber = "EPERM";
               };
 
 
@@ -130,13 +173,13 @@
                   #HOME = "${cfg.dataDir}";
                   SSL_CERT_DIR = "${pkgs.cacert}/etc/ssl/certs";
 
-                  ADMIN_PASSWORD = "${cfg.password}";
                   DARKTABLE_PRESETS = "false";
-                  #DATABASE_DRIVER = "mysql";
-                  DATABASE_DRIVER = "sqlite";
 
-                  DATABASE_DSN = "${cfg.dataDir}/photoprism.sqlite";
-                  #DATABASE_DSN = "photoprism@unix(/run/mysqld/mysqld.sock)/photoprism?charset=utf8mb4,utf8&parseTime=true";
+                  DATABASE_DRIVER = if !cfg.mysql then "sqlite" else "mysql";
+                  DATABASE_DSN =
+                    if !cfg.mysql then "${cfg.dataDir}/photoprism.sqlite"
+                    else
+                      "photoprism@unix(/run/mysqld/mysqld.sock)/photoprism?charset=utf8mb4,utf8&parseTime=true";
                   DEBUG = "true";
                   DETECT_NSFW = "true";
                   EXPERIMENTAL = "true";
