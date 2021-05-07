@@ -7,7 +7,7 @@
   };
 
   outputs = inputs@{ self, nixpkgs, ranz2nix, photoprism, flake-utils }:
-    flake-utils.lib.eachSystem [ "x86_64-linux" ]
+    flake-utils.lib.eachDefaultSystem
       (
         system:
         let
@@ -53,18 +53,26 @@
               };
 
               port = mkOption {
-                type = types.str;
-                default = "2342";
+                type = types.int;
+                default = 2342;
               };
 
-              http_host = mkOption {
+              host = mkOption {
                 type = types.str;
                 default = "127.0.0.1";
               };
 
-              password = mkOption {
-                type = types.str or types.path;
-                default = "photoprism";
+              keyFile = mkOption {
+                type = types.bool;
+                default = false;
+                description = ''
+                  for sops path
+                   sops.secrets.photoprism-password = {
+                     owner = "photoprism";
+                     sopsFile = ../../secrets/secrets.yaml;
+                     path = "/var/lib/photoprism/keyFile";
+                   };
+                '';
               };
 
               dataDir = mkOption {
@@ -146,7 +154,6 @@
                 StateDirectory = "photoprism";
                 SyslogIdentifier = "photoprism";
                 #Sops secrets PHOTOPRISM_ADMIN_PASSWORD= /****/
-                EnvironmentFile = "${cfg.dataDir}/keyFile";
                 PrivateTmp = true;
                 PrivateUsers = true;
                 PrivateDevices = true;
@@ -165,8 +172,8 @@
                 RestrictRealtime = true;
                 SystemCallFilter = [ "@system-service" "~@privileged" "~@resources" ];
                 SystemCallErrorNumber = "EPERM";
+                EnvironmentFile = mkIf cfg.keyFile "${cfg.dataDir}/keyFile";
               };
-
 
               environment = (
                 lib.mapAttrs' (n: v: lib.nameValuePair "PHOTOPRISM_${n}" (toString v)) {
@@ -185,8 +192,8 @@
                   EXPERIMENTAL = "true";
                   WORKERS = "8";
                   ORIGINALS_LIMIT = "1000000";
-                  HTTP_HOST = "${cfg.http_host}";
-                  HTTP_PORT = "${cfg.port}";
+                  HTTP_HOST = "${cfg.host}";
+                  HTTP_PORT = "${toString cfg.port}";
                   HTTP_MODE = "release";
                   JPEG_QUALITY = "92";
                   JPEG_SIZE = "7680";
