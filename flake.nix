@@ -2,7 +2,7 @@
   inputs = {
     nixpkgs.url = "nixpkgs/7ff5e241a2b96fff7912b7d793a06b4374bd846c";
     ranz2nix = { url = "github:andir/ranz2nix"; flake = false; };
-    photoprism = { url = "github:photoprism/photoprism/a9f64f98c2c99c07a9e69a82a1122e3b520790cf"; flake = false; };
+    photoprism = { url = "github:photoprism/photoprism"; flake = false; };
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -246,7 +246,7 @@
                 sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
               '';
 
-              vendorSha256 = "sha256-836HAntAhRUoX5/W2v5Mv58CAkSugQJ1CIPwsj6+pXg=";
+              vendorSha256 = "sha256-bQes6lR2CMM8Oimi2C/5qrP0MNW2GUfwUiKzY5QhP8M=";
 
               passthru = rec {
 

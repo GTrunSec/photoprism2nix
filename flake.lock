@@ -33,17 +33,16 @@
     "photoprism": {
       "flake": false,
       "locked": {
-        "lastModified": 1613655548,
-        "narHash": "sha256-ip5QC2fZyJLYdcgaeCiCmbIb6byoqP9SYN79KAZSsVc=",
+        "lastModified": 1621778559,
+        "narHash": "sha256-zwx3kYIZXDuoy0hK54mHtwTzCpOWtxUoY24lpgC+cEU=",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "a9f64f98c2c99c07a9e69a82a1122e3b520790cf",
+        "rev": "b1856b9d45502ba1a35e1d2ae6ca12fd17223895",
         "type": "github"
       },
       "original": {
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "a9f64f98c2c99c07a9e69a82a1122e3b520790cf",
         "type": "github"
       }
     },
