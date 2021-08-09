@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1627913399,
+        "narHash": "sha256-hY8g6H2KFL8ownSiFeMOjwPC8P0ueXpCVEbxgda3pko=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "12c64ca55c1014cdc1b16ed5a804aa8576601ff2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1610051610,
@@ -15,29 +31,50 @@
         "type": "github"
       }
     },
+    "gomod2nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1627572165,
+        "narHash": "sha256-MFpwnkvQpauj799b4QTBJQFEddbD02+Ln5k92QyHOSk=",
+        "owner": "tweag",
+        "repo": "gomod2nix",
+        "rev": "67f22dd738d092c6ba88e420350ada0ed4992ae8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tweag",
+        "repo": "gomod2nix",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1607560137,
-        "narHash": "sha256-qI5U28r9Ie11OlkwzNFkhW0Z4jLanntJdb3JeFq/85A=",
+        "lastModified": 1628460690,
+        "narHash": "sha256-aLwCbAug2OmPiRCsQ71JZIcUHL/4t3gstLirBGB5D1g=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "7ff5e241a2b96fff7912b7d793a06b4374bd846c",
+        "rev": "9d5f7324c281905c114975e193357f40c9d345a0",
         "type": "github"
       },
       "original": {
         "id": "nixpkgs",
-        "rev": "7ff5e241a2b96fff7912b7d793a06b4374bd846c",
+        "ref": "release-21.05",
         "type": "indirect"
       }
     },
     "photoprism": {
       "flake": false,
       "locked": {
-        "lastModified": 1621778559,
-        "narHash": "sha256-zwx3kYIZXDuoy0hK54mHtwTzCpOWtxUoY24lpgC+cEU=",
+        "lastModified": 1628436482,
+        "narHash": "sha256-kP0rsFQpTDj2MCSkXJRgcsjVB8sMnR3RslQ+QUsrXo8=",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "b1856b9d45502ba1a35e1d2ae6ca12fd17223895",
+        "rev": "e19632349b5dd9a95ddc2899dfdb6630c4340083",
         "type": "github"
       },
       "original": {
@@ -64,10 +101,27 @@
     },
     "root": {
       "inputs": {
+        "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
+        "gomod2nix": "gomod2nix",
         "nixpkgs": "nixpkgs",
         "photoprism": "photoprism",
         "ranz2nix": "ranz2nix"
+      }
+    },
+    "utils": {
+      "locked": {
+        "lastModified": 1623875721,
+        "narHash": "sha256-A8BU7bjS5GirpAUv4QA+QnJ4CceLHkcXdRp4xITDB0s=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "f7e004a55b120c02ecb6219596820fcd32ca8772",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
       }
     }
   },

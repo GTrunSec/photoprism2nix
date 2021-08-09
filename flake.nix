@@ -1,12 +1,14 @@
 {
   inputs = {
-    nixpkgs.url = "nixpkgs/7ff5e241a2b96fff7912b7d793a06b4374bd846c";
+    nixpkgs.url = "nixpkgs/release-21.05";
     ranz2nix = { url = "github:andir/ranz2nix"; flake = false; };
     photoprism = { url = "github:photoprism/photoprism"; flake = false; };
+    flake-compat = { url = "github:edolstra/flake-compat"; flake = false; };
     flake-utils.url = "github:numtide/flake-utils";
+    gomod2nix = { url = "github:tweag/gomod2nix"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
-  outputs = inputs@{ self, nixpkgs, ranz2nix, photoprism, flake-utils }:
+  outputs = inputs@{ self, nixpkgs, ranz2nix, photoprism, flake-utils, gomod2nix, flake-compat }:
     flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" "i686-linux" ]
       (
         system:
@@ -14,6 +16,7 @@
           pkgs = import nixpkgs {
             inherit system; overlays = [
             self.overlay
+            gomod2nix.overlay
           ];
           };
         in
@@ -21,6 +24,7 @@
         rec {
           packages = flake-utils.lib.flattenTree {
             photoprism = pkgs.photoprism;
+            gomod2nix = pkgs.gomod2nix;
           };
 
           defaultPackage = packages.photoprism;
@@ -233,20 +237,34 @@
                 sha256 = photoprism.narHash;
               };
             in
-            buildGoModule {
+            buildGoApplication {
               name = "photoprism";
               inherit src;
 
               subPackages = [ "cmd/photoprism" ];
 
-              buildInputs = [ libtensorflow-bin ];
+              modules = ./gomod2nix.toml;
+
+              CGO_ENABLED = "1";
+              # https://github.com/mattn/go-sqlite3/issues/803
+              CGO_CFLAGS = "-Wno-return-local-addr";
+
+              buildInputs = [
+                #https://github.com/andir/infra/blob/master/nix/packages/photoprism/default.nix
+                (libtensorflow-bin.overrideAttrs (oA: {
+                  # 21.05 does not have libtensorflow-bin 1.x anymore & photoprism isn't compatible with tensorflow 2.x yet
+                  # https://github.com/photoprism/photoprism/issues/222
+                  src = fetchurl {
+                    url = "https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-linux-x86_64-1.14.0.tar.gz";
+                    sha256 = "04bi3ijq4sbb8c5vk964zlv0j9mrjnzzxd9q9knq3h273nc1a36k";
+                  };
+                }))
+              ];
 
               prePatch = ''
                 substituteInPlace internal/commands/passwd.go --replace '/bin/stty' "${coreutils}/bin/stty"
                 sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
               '';
-
-              vendorSha256 = "sha256-bQes6lR2CMM8Oimi2C/5qrP0MNW2GUfwUiKzY5QhP8M=";
 
               passthru = rec {
 
