@@ -13,12 +13,16 @@
       (
         system:
         let
-          pkgs = import nixpkgs {
-            inherit system; overlays = [
-            self.overlay
-            gomod2nix.overlay
-          ];
-          };
+          pkgs = import nixpkgs
+            {
+              inherit system; overlays = [
+              self.overlay
+              gomod2nix.overlay
+            ];
+              config = {
+                allowUnsupportedSystem = true;
+              };
+            };
         in
         with pkgs;
         rec {
