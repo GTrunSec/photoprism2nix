@@ -99,7 +99,7 @@
             };
           };
 
-          config = with lib; {
+          config = with lib; mkIf cfg.enable {
             users.users.photoprism = { isSystemUser = true; group = "photoprism"; };
 
             users.groups.photoprism = { };
