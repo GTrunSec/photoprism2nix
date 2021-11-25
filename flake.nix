@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "nixpkgs/release-21.05";
+    nixpkgs.url = "nixpkgs/release-21.11";
     ranz2nix = { url = "github:andir/ranz2nix"; flake = false; };
     photoprism = { url = "github:photoprism/photoprism"; flake = false; };
     flake-compat = { url = "github:edolstra/flake-compat"; flake = false; };
