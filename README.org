@@ -1,6 +1,23 @@
 #+TITLE: README
 
 
+* Setting up your photoprism service
+
+#+begin_src nix :async :exports both :results output
+  sops.secrets."services/photoprism/password" = {
+    owner = "photoprism";
+    path = "/var/lib/photoprism/keyFile";
+  };
+
+  services.photoprism = {
+    enable = true;
+    mysql = true;
+    # sops support
+    #keyFile = true;
+    port = 9999;
+    host = "127.0.0.1";
+  };
+#+end_src
 
 * Native Nix Support
 
