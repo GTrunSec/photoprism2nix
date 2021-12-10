@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "nixpkgs/release-21.11";
+    nixpkgs.url = "github:nixos/nixpkgs/release-21.11";
     ranz2nix = { url = "github:andir/ranz2nix"; flake = false; };
     photoprism = { url = "github:photoprism/photoprism"; flake = false; };
     flake-compat = { url = "github:edolstra/flake-compat"; flake = false; };
@@ -37,8 +37,8 @@
 
           devShell = mkShell {
             shellHook = ''
-              ${pkgs.photoprism}/bin/photoprism --admin-password photoprism --import-path ~/Pictures \
-               --assets-path ${pkgs.photoprism.assets} start
+              # ${pkgs.photoprism}/bin/photoprism --admin-password photoprism --import-path ~/Pictures \
+              #  --assets-path ${pkgs.photoprism.assets} start
             '';
           };
         }
@@ -275,7 +275,7 @@
                 frontend =
                   let
                     noderanz = callPackage ranz2nix {
-                      nodejs = nodejs-12_x;
+                      nodejs = nodejs-14_x;
                       sourcePath = src + "/frontend";
                       packageOverride = name: spec:
                         if name == "minimist" && spec ? resolved && spec.resolved == "" && spec.version == "1.2.0" then {
@@ -293,7 +293,7 @@
                   in
                   stdenv.mkDerivation {
                     name = "photoprism-frontend";
-                    nativeBuildInputs = [ nodejs-12_x ];
+                    nativeBuildInputs = [ nodejs-14_x ];
 
                     inherit src;
 
