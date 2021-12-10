@@ -1,5 +1,30 @@
 #+TITLE: README
 
+
+
+* Native Nix Support
+
+
+#+begin_src nix :async :exports both :results output
+{ pkgs ? import <nixpkgs> { } }:
+let
+  photoprism2nix = import (builtins.fetchTarball {
+    name = "photoprism2nix-2021-11-25";
+    url = "https://github.com/GTrunSec/photoprism2nix/archive/51d1ff6068f6823e08bba914293a3e891bdc0612.tar.gz";
+    sha256 = "sha256:0yqj3bg5mkz4ivpgx2agwq324sr8psdgd169f1s4kfi7krpds7l8";
+  });
+in
+pkgs.mkShell {
+  buildInputs = [ photoprism2nix.defaultPackage.x86_64-linux ];
+}
+#+end_src
+
+- nix modules
+
+#+begin_src nix :async :exports both :results output
+imports = [ photoprism2nix.nixosModules.photoprism ]
+#+end_src
+
 * Modules Test
 
 
