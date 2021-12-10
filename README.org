@@ -1,11 +1,13 @@
 #+TITLE: README
 
+*NOTE*: default password is ~photoprism~
 
 * Setting up your photoprism service
 
 #+begin_src nix :async :exports both :results output
   sops.secrets."services/photoprism/password" = {
     owner = "photoprism";
+    #keyFiles: PHOTOPRISM_ADMIN_PASSWORD=<yourpassword>
     path = "/var/lib/photoprism/keyFile";
   };
 
