@@ -226,7 +226,7 @@
                     THUMB_SIZE_UNCACHED = "7680";
                     THUMB_UNCACHED = "true";
                     UPLOAD_NSFW = "true";
-                  } // (if cfg.keyFile then { ADMIN_PASSWORD = "photoprism"; } else { })
+                  } // (if !cfg.keyFile then { ADMIN_PASSWORD = "photoprism"; } else { })
               );
             };
           };
