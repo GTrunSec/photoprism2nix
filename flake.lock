@@ -54,11 +54,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1644600908,
-        "narHash": "sha256-TLWxMZAgn4o+y4DgCwzbzhI0vrZ45CmQo4EbhzhH1Ko=",
+        "lastModified": 1646512304,
+        "narHash": "sha256-14F8HuTEcL53znHrtg7ee/kV1F87oc4KZGqhv7gGBmo=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "b1396e289d341cbd0a6751f2ffd014ac461526dd",
+        "rev": "2c34ff384328ef44257dd3ec2052794427fdf9fc",
         "type": "github"
       },
       "original": {
@@ -71,11 +71,11 @@
     "photoprism": {
       "flake": false,
       "locked": {
-        "lastModified": 1644435044,
-        "narHash": "sha256-qAF/bE4MypG4nRfnaNUg9WC1v+1/C/eqJwLTSguZ7+w=",
+        "lastModified": 1646430173,
+        "narHash": "sha256-SbnYw0A3nTBYpCaQdj4BbCihBcq0ZE8JImYG/itbR3g=",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "ec8b0fd21204a23ad2b1125579228e76badd21c8",
+        "rev": "ba1004d7eee6bc20cfcd06092b839a8c39c72c29",
         "type": "github"
       },
       "original": {
