@@ -54,17 +54,33 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1646512304,
-        "narHash": "sha256-14F8HuTEcL53znHrtg7ee/kV1F87oc4KZGqhv7gGBmo=",
+        "lastModified": 1653326962,
+        "narHash": "sha256-W8feCYqKTsMre4nAEpv5Kx1PVFC+hao/LwqtB2Wci/8=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "2c34ff384328ef44257dd3ec2052794427fdf9fc",
+        "rev": "41cc1d5d9584103be4108c1815c350e07c807036",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "release-21.11",
+        "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "npmlock2nix": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1648735462,
+        "narHash": "sha256-G22WBttdFoWp7E/YvGfePOc+W+ZsQGw+IwpFbAwJNeI=",
+        "owner": "nix-community",
+        "repo": "npmlock2nix",
+        "rev": "dd2897c3a6e404446704a63f40b9a29fa0acf752",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "npmlock2nix",
         "type": "github"
       }
     },
@@ -84,30 +100,14 @@
         "type": "github"
       }
     },
-    "ranz2nix": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1594668772,
-        "narHash": "sha256-JE7lk0rDP5itZqWOwjuv8N18xLbGc6XL/0u9rMnhXUk=",
-        "owner": "andir",
-        "repo": "ranz2nix",
-        "rev": "637276c3110716d2a798e737fe62e54b37190d50",
-        "type": "github"
-      },
-      "original": {
-        "owner": "andir",
-        "repo": "ranz2nix",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
         "gomod2nix": "gomod2nix",
         "nixpkgs": "nixpkgs",
-        "photoprism": "photoprism",
-        "ranz2nix": "ranz2nix"
+        "npmlock2nix": "npmlock2nix",
+        "photoprism": "photoprism"
       }
     },
     "utils": {
