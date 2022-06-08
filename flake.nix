@@ -36,7 +36,7 @@
           {
             inherit system;
             overlays = [
-              self.overlay
+              self.overlays.default
               gomod2nix.overlays.default
             ];
             config = {
@@ -46,15 +46,15 @@
       in
         with pkgs; rec {
           packages = flake-utils.lib.flattenTree {
-            photoprism = pkgs.photoprism;
-            gomod2nix = pkgs.gomod2nix;
+            inherit (pkgs)
+              photoprism
+              gomod2nix;
+            default = pkgs.photoprism;
           };
-
-          defaultPackage = packages.photoprism;
 
           checks.build = packages.photoprism;
 
-          devShell = mkShell {
+          devShells.default = mkShell {
             shellHook = ''
               # ${pkgs.photoprism}/bin/photoprism --admin-password photoprism --import-path ~/Pictures \
               #  --assets-path ${pkgs.photoprism.assets} start
@@ -270,7 +270,7 @@
           };
       };
 
-      overlay = final: prev: {
+      overlays.default = final: prev: {
         photoprism = with final; (
           let
             libtensorflow-bin = prev.libtensorflow-bin.overrideAttrs (old: rec {
@@ -340,7 +340,7 @@
                   };
                 in
                   runCommand "photoprims-assets" {} ''
-                    cp -rv ${src}/assets $out
+                    cp -rv ${photoprism}/assets $out
                     chmod -R +rw $out
                     rm -rf $out/static/build
                     cp -rv ${frontend} $out/static/build
