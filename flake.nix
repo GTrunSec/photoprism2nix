@@ -310,7 +310,7 @@
 
                 frontend = (callPackage inputs.npmlock2nix {}).build {
                   name = "photoprism-frontend";
-                  src = src + "/frontend";
+                  src = photoprism + "/frontend";
                   nodejs = nodejs-14_x;
 
                   postUnpack = ''
