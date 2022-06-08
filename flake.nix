@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/release-22.05";
     npmlock2nix = {
       url = "github:nix-community/npmlock2nix";
       flake = false;
@@ -37,7 +37,7 @@
             inherit system;
             overlays = [
               self.overlay
-              gomod2nix.overlay
+              gomod2nix.overlays.default
             ];
             config = {
               allowUnsupportedSystem = true;
@@ -273,12 +273,6 @@
       overlay = final: prev: {
         photoprism = with final; (
           let
-            src = pkgs.fetchFromGitHub {
-              owner = "photoprism";
-              repo = "photoprism";
-              rev = photoprism.rev;
-              sha256 = photoprism.narHash;
-            };
             libtensorflow-bin = prev.libtensorflow-bin.overrideAttrs (old: rec {
               # 21.05 does not have libtensorflow-bin 1.x anymore & photoprism isn't compatible with tensorflow 2.x yet
               # https://github.com/photoprism/photoprism/issues/222
@@ -291,14 +285,16 @@
           in
             buildGoApplication {
               name = "photoprism";
-              inherit src;
+
+              src = photoprism;
+
+              go = prev.go_1_18;
 
               subPackages = ["cmd/photoprism"];
 
               modules = ./gomod2nix.toml;
 
               CGO_ENABLED = "1";
-              # https://github.com/mattn/go-sqlite3/issues/803
               CGO_CFLAGS = "-Wno-return-local-addr";
 
               buildInputs = [
@@ -307,7 +303,6 @@
 
               prePatch = ''
                 substituteInPlace internal/commands/passwd.go --replace '/bin/stty' "${coreutils}/bin/stty"
-                sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
               '';
 
               passthru = rec {
