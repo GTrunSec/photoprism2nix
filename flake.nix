@@ -182,7 +182,7 @@
                 User = "photoprism";
                 BindPaths =
                   [
-                    "/var/lib/photoprism"
+                    cfg.dataDir
                   ]
                   ++ lib.optionals cfg.mysql [
                     "-/run/mysqld"
