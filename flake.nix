@@ -1,6 +1,7 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixos.url = "github:nixos/nixpkgs/nixos-22.05";
     npmlock2nix = {
       url = "github:nix-community/npmlock2nix";
       flake = false;
@@ -31,6 +32,7 @@
     flake-utils.lib.eachSystem ["x86_64-linux" "x86_64-darwin" "i686-linux"]
     (
       system: let
+        nixos = inputs.nixos.legacyPackages.${system};
         pkgs =
           import nixpkgs
           {
@@ -273,7 +275,7 @@
       overlays.default = final: prev: {
         photoprism = with final; (
           let
-            libtensorflow-bin = prev.libtensorflow-bin.overrideAttrs (old: rec {
+            libtensorflow-bin = inputs.nixos.legacyPackages.${prev.system}.libtensorflow-bin.overrideAttrs (old: rec {
               # 21.05 does not have libtensorflow-bin 1.x anymore & photoprism isn't compatible with tensorflow 2.x yet
               # https://github.com/photoprism/photoprism/issues/222
               version = "1.15.0";
@@ -288,7 +290,7 @@
 
               src = photoprism;
 
-              go = prev.go_1_18;
+              go = prev.go_1_19;
 
               subPackages = ["cmd/photoprism"];
 
