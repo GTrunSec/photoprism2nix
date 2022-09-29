@@ -39,11 +39,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1660721781,
-        "narHash": "sha256-7skn4VUVzxqgH6kU7juBlARQ4Ts+qQ4Lq48xU87x8xI=",
+        "lastModified": 1662501203,
+        "narHash": "sha256-4BKeqCX2zwgBiTdlc2DjGQ0CttKm0vSw0r/bdFdM/PQ=",
         "owner": "tweag",
         "repo": "gomod2nix",
-        "rev": "b8c2216317cd23e4f49f1235c27522604be60349",
+        "rev": "89cd0675b96775aa3ee86e7c0cf5bc238dd27976",
         "type": "github"
       },
       "original": {
@@ -54,16 +54,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1660936389,
-        "narHash": "sha256-GZcCsjq8EUA65MXdPQDvZdXkKcuhCnlvaSBpS/aqFwY=",
+        "lastModified": 1664328665,
+        "narHash": "sha256-MVUhaUYwzrmzD/RzTBEGIpYBmncP3JNvZMjGyXtuX/w=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "921b28fa6ed61f6275fdebfec25b630dd1e4f378",
+        "rev": "0c97cb06a5b8f1a266fea43b7335de562ea16d3b",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixpkgs-unstable",
+        "ref": "nixos-22.05",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -87,11 +87,11 @@
     "photoprism": {
       "flake": false,
       "locked": {
-        "lastModified": 1660597351,
-        "narHash": "sha256-H5y/H+mut0vbZrVlIZEEsnxplVV8hd0lBXg54+c7OOU=",
+        "lastModified": 1664366417,
+        "narHash": "sha256-gDTjoz1np3rrszA4RnxjP09b2ooEKEIpk7C3H8CbnxE=",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "5d0a2ccf1bf981e3e91c14464f241cc8a585f857",
+        "rev": "47929566dbd0080df60b1cbb187fc05f37fe3e74",
         "type": "github"
       },
       "original": {

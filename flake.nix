@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.05";
     npmlock2nix = {
       url = "github:nix-community/npmlock2nix";
       flake = false;
